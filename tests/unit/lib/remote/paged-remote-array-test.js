@@ -24,7 +24,7 @@ module("PagedRemoteArray");
 var Promise = Ember.RSVP.Promise;
 
 var paramTest = function(name,ops,f) {
-  test(name, function() {
+  test(name, function(assert) {
     var subject = null;
 
     Ember.run(function() {
@@ -105,13 +105,13 @@ asyncTest("double start", function() {
   var promise = makePromise(3);
   promise.then(function(res) {
     QUnit.start();
-    equal(res,3);
+    assert.equal(res,3);
 
     var promise2 = makePromise(5);
     QUnit.stop();
     promise2.then(function(res2) {
       QUnit.start();
-      equal(res2,5);
+      assert.equal(res2,5);
     });
   });
 });
@@ -162,7 +162,7 @@ asyncTest("notifies observer", function() {
 
     equalArray(paged,[1,2]);
     // not sure if I want this to be 0
-    equal(observer.get('arrayDidChangeCount'),1);
+    assert.equal(observer.get('arrayDidChangeCount'),1);
 
     QUnit.stop();
 
@@ -170,7 +170,7 @@ asyncTest("notifies observer", function() {
     paged.then(function() {
       QUnit.start();
       equalArray(paged,[3,4]);
-      equal(observer.get('arrayDidChangeCount'),2);
+      assert.equal(observer.get('arrayDidChangeCount'),2);
     });
   });
 });
@@ -183,42 +183,42 @@ asyncTest("takes otherParams", function() {
     QUnit.start();
 
     var findArgs = store.get('findArgs');
-    equal(findArgs.length,1);
-    equal(findArgs[0].params.page,1);
-    equal(findArgs[0].params.name,"Adam");
+    assert.equal(findArgs.length,1);
+    assert.equal(findArgs[0].params.page,1);
+    assert.equal(findArgs[0].params.name,"Adam");
   });
 });
 
-test("paramsForBackend", function() {
+test("paramsForBackend", function(assert) {
   var store = MockStore.create();
   var paged = PagedRemoteArray.create({store: store, modelName: 'number', page: 1, perPage: 2});
   var res = paged.get('paramsForBackend');
-  deepEqual(res,{page: 1, per_page: 2});
+  assert.deepEqual(res,{page: 1, per_page: 2});
 });
 
-test("paramsForBackend with otherParams", function() {
+test("paramsForBackend with otherParams", function(assert) {
   var store = MockStore.create();
   var paged = PagedRemoteArray.create({store: store, modelName: 'number', page: 1, perPage: 2, otherParams: {name: "Adam"}});
   var res = paged.get('paramsForBackend');
-  deepEqual(res,{page: 1, per_page: 2, name: "Adam"});
+  assert.deepEqual(res,{page: 1, per_page: 2, name: "Adam"});
 });
 
-test("paramsForBackend with param mapping", function() {
+test("paramsForBackend with param mapping", function(assert) {
   var store = MockStore.create();
   var paged = PagedRemoteArray.create({store: store, modelName: 'number', page: 1, perPage: 2});
   
   //paged.set('paramMapping', {page: "currentPage"});
   paged.addQueryParamMapping('page','currentPage');
   var res = paged.get('paramsForBackend');
-  deepEqual(res,{currentPage: 1, per_page: 2});
+  assert.deepEqual(res,{currentPage: 1, per_page: 2});
 });
 
-test("paramsForBackend with param mapping and function", function() {
+test("paramsForBackend with param mapping and function", function(assert) {
   var store = MockStore.create();
   var paged = PagedRemoteArray.create({store: store, modelName: 'number', page: 1, perPage: 2});
   paged.addQueryParamMapping('page','currentPage',function(ops) { return ops.perPage + ops.page; });
   var res = paged.get('paramsForBackend');
-  deepEqual(res, {currentPage: 3, per_page: 2});
+  assert.deepEqual(res, {currentPage: 3, per_page: 2});
 });
 
 
@@ -229,7 +229,7 @@ asyncTest("basic meta", function() {
 
   paged.then(function() {
     var meta = paged.get('meta');
-    equal(meta.total_pages,3);
+    assert.equal(meta.total_pages,3);
     QUnit.start();
   });
 });
@@ -241,7 +241,7 @@ asyncTest("meta with num_pages", function() {
 
   paged.then(function() {
     var meta = paged.get('meta');
-    equal(meta.total_pages,3);
+    assert.equal(meta.total_pages,3);
     QUnit.start();
   });
 });
@@ -253,7 +253,7 @@ asyncTest("meta with num_pages and function", function() {
 
   paged.then(function() {
     var meta = paged.get('meta');
-    equal(meta.total_pages,6);
+    assert.equal(meta.total_pages,6);
     QUnit.start();
   });
 });

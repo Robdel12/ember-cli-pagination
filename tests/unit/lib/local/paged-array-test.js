@@ -6,7 +6,7 @@ import equalArray from '../../../helpers/equal-array';
 module("PagedArray");
 
 var paramTest = function(name,ops,f) {
-  test(name, function() {
+  test(name, function(assert) {
     var subject = null;
 
     Ember.run(function() {
@@ -18,7 +18,7 @@ var paramTest = function(name,ops,f) {
 };
 
 paramTest("smoke", {page: 1, perPage: 2, content: [1,2,3,4,5]}, function(s) {
-  equal(s.get('totalPages'),3);
+  assert.equal(s.get('totalPages'),3);
   equalArray(s,[1,2]);
 
   s.set('page',2);
@@ -49,13 +49,13 @@ paramTest("page oob event test", {page: 1, perPage: 2, content: [1,2,3,4,5]}, fu
     s.set('page',20);
   });
 
-  equal(events.length,1);
-  equal(events[0].page,20);
+  assert.equal(events.length,1);
+  assert.equal(events[0].page,20);
 
   Ember.run(function() {
     s.set('page',2);
   });
-  equal(events.length,1);
+  assert.equal(events.length,1);
 });
 
 import LockToRange from 'ember-cli-pagination/watch/lock-to-range';

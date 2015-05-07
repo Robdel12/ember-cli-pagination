@@ -1,4 +1,5 @@
 import startApp from '../helpers/start-app';
+import {module, test} from 'qunit';
 import pretenderServer from '../helpers/pretender-server';
 import Todo from '../../models/todo';
 import Ember from 'ember';
@@ -7,7 +8,7 @@ var App = null;
 var server = null;
 
 var todosTestRemote = function(name, f, initialPage) {
-  test(name, function() {
+  test(name, function(assert) {
     var url = "/todos/remote";
     if (initialPage) {
       url += "?page="+initialPage;
@@ -17,7 +18,7 @@ var todosTestRemote = function(name, f, initialPage) {
 };
 
 var todosTestLocal = function(name, f, initialPage) {
-  test(name, function() {
+  test(name, function(assert) {
     var url = "/todos/local";
     if (initialPage) {
       url += "?page="+initialPage;
@@ -33,7 +34,7 @@ var todosTestLocal = function(name, f, initialPage) {
 
 var createTests = function(todosTest,todosUrl) {
   todosTest("page links", function() {
-    equal(find(".pagination").length, 1);
+    assert.equal(find(".pagination").length, 1);
     hasPages(4);
   });
 
@@ -67,7 +68,7 @@ var createTests = function(todosTest,todosUrl) {
       hasTodos(10);
       hasActivePage(2);
 
-      equal(currentURL(), todosUrl+"?page=2");
+      assert.equal(currentURL(), todosUrl+"?page=2");
     });
   },2);
 
@@ -116,8 +117,8 @@ var createTests = function(todosTest,todosUrl) {
     });
     andThen(function() {
       hasTodos(3);
-      equal(currentURL(), todosUrl+"?page=4");
-      notEqual(currentURL(), todosUrl+"?page=5");
+      assert.equal(currentURL(), todosUrl+"?page=4");
+      assert.notEqual(currentURL(), todosUrl+"?page=5");
       hasActivePage(4);
     });
   });
@@ -129,19 +130,19 @@ var createTests = function(todosTest,todosUrl) {
     });
     andThen(function() {
       hasTodos(10);
-      equal(currentURL(), todosUrl);
-      notEqual(currentURL(), todosUrl+"?page=-1");
+      assert.equal(currentURL(), todosUrl);
+      assert.notEqual(currentURL(), todosUrl+"?page=-1");
       hasActivePage(1);
     });
   });
 };
 
 module('Integration - Pagination Remote', {
-  setup: function() {
+  beforeEach: function() {
     App = startApp();
     server = pretenderServer();
   },
-  teardown: function() {
+  afterEach: function() {
     Ember.run(App, 'destroy');
     server.shutdown();
   }
@@ -150,11 +151,11 @@ module('Integration - Pagination Remote', {
 createTests(todosTestRemote,"/todos/remote");
 
 module('Integration - Pagination Local', {
-  setup: function() {
+  beforeEach: function() {
     App = startApp();
     server = pretenderServer();
   },
-  teardown: function() {
+  afterEach: function() {
     Ember.run(App, 'destroy');
     server.shutdown();
   }

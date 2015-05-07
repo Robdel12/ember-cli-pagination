@@ -1,4 +1,5 @@
 import startApp from '../helpers/start-app';
+import {module, test} from 'qunit';
 import pretenderServer from '../helpers/pretender-server';
 import Todo from '../../models/todo';
 import Ember from 'ember';
@@ -9,13 +10,13 @@ var server = null;
 
 
 var todosTestLocal = function(name, f) {
-  test(name, function() {
+  test(name, function(assert) {
     visit("/todos/infinite").then(f);
   });
 };
 
 var todosTestRemote = function(name, f) {
-  test(name, function() {
+  test(name, function(assert) {
     visit("/todos/infinite-remote").then(f);
   });
 };
@@ -32,7 +33,7 @@ var runTests = function(todosTest) {
     andThen(function() {
       QUnit.stop();
       setTimeout(function() {
-        equal(find('.infinite .todo').length,20);
+        assert.equal(find('.infinite .todo').length,20);
         QUnit.start();
       },50);
     });
@@ -40,11 +41,11 @@ var runTests = function(todosTest) {
 };
 
 module('Integration - Infinite Pagination Local', {
-  setup: function() {
+  beforeEach: function() {
     App = startApp();
     server = pretenderServer();
   },
-  teardown: function() {
+  afterEach: function() {
     Ember.run(App, 'destroy');
     server.shutdown();
   }
@@ -53,11 +54,11 @@ module('Integration - Infinite Pagination Local', {
 runTests(todosTestLocal);
 
 module('Integration - Infinite Pagination Remote', {
-  setup: function() {
+  beforeEach: function() {
     App = startApp();
     server = pretenderServer();
   },
-  teardown: function() {
+  afterEach: function() {
     Ember.run(App, 'destroy');
     server.shutdown();
   }

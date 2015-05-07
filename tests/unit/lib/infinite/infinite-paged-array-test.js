@@ -27,19 +27,19 @@ asyncTest("smoke", function() {
   var s = InfinitePagedArray.create({all: makeAllPaged()});
   s.then(function() {
     equalArray(s,[1,2]);
-    equal(s.get('length'),2);
+    assert.equal(s.get('length'),2);
     QUnit.start();
   });
 });
 
-test("add next page", function() {
+test("add next page", function(assert) {
   var s = InfinitePagedArray.create({all: makeAllPaged()});
   equalArray(s,[1,2]);
   s.loadNextPage();
   equalArray(s,[1,2,3,4]);
 });
 
-test("add next page - unpagedSource", function() {
+test("add next page - unpagedSource", function(assert) {
   var s = InfinitePagedArray.createFromUnpaged({all: [1,2,3,4,5], perPage: 2});
   equalArray(s,[1,2]);
   s.loadNextPage();
