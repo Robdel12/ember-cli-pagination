@@ -1,5 +1,5 @@
 import Ember from 'ember';
-import { test } from 'ember-qunit';
+import { test, asyncTest } from 'ember-qunit';
 import BasePagedRemoteArray from 'ember-cli-pagination/remote/paged-remote-array';
 import PagedLocalArray from 'ember-cli-pagination/local/paged-array';
 import Util from 'ember-cli-pagination/util';
@@ -83,7 +83,7 @@ asyncTest("change page", function() {
   paged.then(function() {
     QUnit.start();
     equalArray(paged,[1,2]);
-    
+
     paged.runSet("page",2);
 
     paged.then(function() {
@@ -206,7 +206,7 @@ test("paramsForBackend with otherParams", function(assert) {
 test("paramsForBackend with param mapping", function(assert) {
   var store = MockStore.create();
   var paged = PagedRemoteArray.create({store: store, modelName: 'number', page: 1, perPage: 2});
-  
+
   //paged.set('paramMapping', {page: "currentPage"});
   paged.addQueryParamMapping('page','currentPage');
   var res = paged.get('paramsForBackend');

@@ -21,29 +21,11 @@ var todosTestRemote = function(name, f) {
   });
 };
 
-var runTests = function(todosTest) {
-  todosTest("smoke", function() {
-    hasTodos(10);
-  });
-
-  todosTest("next page", function() {
-    hasTodos(10);
-
-    click(".infinite .next a");
-    andThen(function() {
-      QUnit.stop();
-      setTimeout(function() {
-        assert.equal(find('.infinite .todo').length,20);
-        QUnit.start();
-      },50);
-    });
-  });
-};
-
 module('Integration - Infinite Pagination Local', {
   beforeEach: function() {
     App = startApp();
     server = pretenderServer();
+    visit("/todos/infinite-remote");
   },
   afterEach: function() {
     Ember.run(App, 'destroy');
@@ -51,17 +33,49 @@ module('Integration - Infinite Pagination Local', {
   }
 });
 
-runTests(todosTestLocal);
+test("smoke", function(assert) {
+  hasTodos(10);
+});
+
+test("next page", function(assert) {
+  hasTodos(10);
+
+  click(".infinite .next a");
+  andThen(function() {
+    QUnit.stop();
+    setTimeout(function() {
+      assert.equal(find('.infinite .todo').length,20);
+      QUnit.start();
+    },50);
+  });
+});
 
 module('Integration - Infinite Pagination Remote', {
   beforeEach: function() {
     App = startApp();
     server = pretenderServer();
+    visit("/todos/infinite");
   },
   afterEach: function() {
     Ember.run(App, 'destroy');
     server.shutdown();
   }
 });
-runTests(todosTestRemote);
+
+test("smoke", function(assert) {
+  hasTodos(10);
+});
+
+test("next page", function(assert) {
+  hasTodos(10);
+
+  click(".infinite .next a");
+  andThen(function() {
+    QUnit.stop();
+    setTimeout(function() {
+      assert.equal(find('.infinite .todo').length,20);
+      QUnit.start();
+    },50);
+  });
+});
 

@@ -4,23 +4,21 @@ import DivideIntoPages from 'ember-cli-pagination/divide-into-pages';
 
 module("DivideIntoPages");
 
-var paramTest = function(name,ops,f) {
-  test(name, function(assert) {
-    var subject = null;
+var subject = function() {
+  var subject = null;
+  var ops = {perPage: 2, all: [1,2,3,4,5]};
 
-    Ember.run(function() {
-      subject = DivideIntoPages.create(ops);
-    });
-
-    f(subject);
+  Ember.run(function() {
+    subject = DivideIntoPages.create(ops);
   });
+
 };
 
-paramTest("smoke", {perPage: 2, all: [1,2,3,4,5]}, function(s) {
-  assert.equal(s.totalPages(),3);
-  assert.deepEqual(s.objsForPage(2),[3,4]);
+test("smoke", function(assert) {
+  assert.equal(subject.totalPages(),3);
+  assert.deepEqual(subject.objsForPage(2),[3,4]);
 });
 
-paramTest("page out of range returns empty array", {perPage: 2, all: [1,2,3,4,5]}, function(s) {
-  assert.deepEqual(s.objsForPage(25),[]);
+test("page out of range returns empty array", function(assert) {
+  assert.deepEqual(subject.objsForPage(25),[]);
 });

@@ -8,6 +8,7 @@ var App = null;
 var server = null;
 
 var todosTestRemote = function(name, f, initialPage) {
+
   test(name, function(assert) {
     var url = "/todos/remote";
     if (initialPage) {
@@ -28,21 +29,21 @@ var todosTestLocal = function(name, f, initialPage) {
 };
 
 // commented out for now because it fails.
-// todosTest("numRemoteCalls", function() {
+// todosTest("numRemoteCalls", function(assert) {
 //   equal(find(".numRemoteCalls").text().trim(), "1");
 // });
 
-var createTests = function(todosTest,todosUrl) {
-  todosTest("page links", function() {
+var createTests = function(todosTest, todosUrl) {
+  test("page links", function(assert) {
     assert.equal(find(".pagination").length, 1);
     hasPages(4);
   });
 
-  todosTest("first page is active at start", function() {
+  test("first page is active at start", function(assert) {
     hasActivePage(1);
   });
 
-  todosTest("clicking page 2", function() {
+  test("clicking page 2", function(assert) {
     clickPage(2);
     andThen(function() {
       hasTodos(10);
@@ -50,7 +51,7 @@ var createTests = function(todosTest,todosUrl) {
     });
   });
 
-  todosTest("clicking page 4", function() {
+  test("clicking page 4", function(assert) {
     clickPage(4);
     andThen(function() {
       hasTodos(3);
@@ -63,7 +64,7 @@ var createTests = function(todosTest,todosUrl) {
     });
   });
 
-  todosTest("passing in page 2 query param", function() {
+  test("passing in page 2 query param", function(assert) {
     andThen(function() {
       hasTodos(10);
       hasActivePage(2);
@@ -72,7 +73,7 @@ var createTests = function(todosTest,todosUrl) {
     });
   },2);
 
-  todosTest("next button - proper buttons visible", function() {
+  test("next button - proper buttons visible", function(assert) {
     hasActivePage(1);
     hasButtons({
       prev: false,
@@ -80,7 +81,7 @@ var createTests = function(todosTest,todosUrl) {
     });
   });
 
-  todosTest("click next", function() {
+  test("click next", function(assert) {
     clickPage("next");
     andThen(function() {
       hasButtons({
@@ -92,7 +93,7 @@ var createTests = function(todosTest,todosUrl) {
     });
   });
 
-  todosTest("click prev", function() {
+  test("click prev", function(assert) {
     clickPage(2);
     andThen(function() {
       clickPage("prev");
@@ -107,7 +108,7 @@ var createTests = function(todosTest,todosUrl) {
     });
   });
 
-  todosTest("click next on last page and not increment", function() {
+  test("click next on last page and not increment", function(assert) {
     clickPage(4);
     andThen(function() {
       clickPage("next");
@@ -123,7 +124,7 @@ var createTests = function(todosTest,todosUrl) {
     });
   });
 
-  todosTest("click prev on first page and not decrement", function() {
+  test("click prev on first page and not decrement", function(assert) {
     clickPage("prev");
     andThen(function() {
       clickPage("prev");
@@ -148,7 +149,7 @@ module('Integration - Pagination Remote', {
   }
 });
 
-createTests(todosTestRemote,"/todos/remote");
+createTests(todosTestRemote, "/todos/remote");
 
 module('Integration - Pagination Local', {
   beforeEach: function() {
@@ -160,4 +161,4 @@ module('Integration - Pagination Local', {
     server.shutdown();
   }
 });
-createTests(todosTestLocal,"/todos/local");
+createTests(todosTestLocal, "/todos/local");

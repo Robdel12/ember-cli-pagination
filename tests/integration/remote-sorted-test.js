@@ -28,14 +28,14 @@ var todosTest = function(name, f, sortByField) {
   });
 };
 
-todosTest("smoke", function() {
+test("smoke", function(assert) {
   assert.equal(find(".pagination").length, 1);
   hasPages(4);
   hasTodo(0,"Clean Gutters 0");
   hasTodo(1,"Make Dinner 0");
 });
 
-todosTest("smoke sorted", function() {
+test("smoke sorted", function(assert) {
   assert.equal(find(".pagination").length, 1);
   hasPages(4);
 
@@ -45,7 +45,7 @@ todosTest("smoke sorted", function() {
   assert.equal(find("#sortByField input").val(),"name");
 },"name");
 
-todosTest("change to sorted", function() {
+test("change to sorted", function(assert) {
   assert.equal(find(".pagination").length, 1);
   hasPages(4);
   hasTodo(0,"Clean Gutters 0");
